@@ -28,13 +28,14 @@ $ sudo docker run -e 'NAME=Docker_Server_2' \
 | EXTERNAL_PORT  | 1234  |  External port, used for server list registration  |  1234 |   |
 | ADVERTISE_ONLINE  | True  | Register with public  server list |  False |   |
 | MOD  | ra  |  OpenRA Mod "Red Alert"  | ra |   |
-| MAP  | ...  | Load initial map with id  |  |   |
+| MAP  | a967ccc7fc250d89d6945d63ca9ee5e0f539eeb7 | Load initial map with id, see [Resource Center][1]  |  |   |
 | PASSWORD  | whatever | Password to connect |  |   |
 
 
 Various options can be set by using environment variables, see:
-
 https://github.com/rmoriz/openra-dockerfile/blob/master/bin/start.sh
+
+[1]: http://resource.openra.net/maps/110
 
 ## FYI
 
