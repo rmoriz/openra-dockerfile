@@ -9,7 +9,7 @@ Ban=${BAN:-""}
 Dedicated="True"
 DedicatedLoop="True" # A new instance is spawned once previous game is finished
 ListenPort=1234
-ExternalPort=1234
+ExternalPort=${EXTERNAL_PORT:-"1234"}
 AdvertiseOnline=${ADVERTISE_ONLINE:-"False"}
 
 MOTD="${MOTD:-"welcome to a Docker based OpenRA server"}"
