@@ -15,7 +15,7 @@ $ sudo docker run -e 'NAME=Docker_Server_2' \
            -e 'EXTERNAL_PORT=55555' \
            -e 'ADVERTISE_ONLINE=True' \
            -p 55555:1234 \
-           -d rmoriz/openra 
+           -d rmoriz/openra
 ```
 
 ## Settings
@@ -28,6 +28,8 @@ $ sudo docker run -e 'NAME=Docker_Server_2' \
 | EXTERNAL_PORT  | 1234  |  External port, used for server list registration  |  1234 |   |
 | ADVERTISE_ONLINE  | True  | Register with public  server list |  False |   |
 | MOD  | ra  |  OpenRA Mod "Red Alert"  | ra |   |
+| MAP  | ...  | Load initial map with id  |  |   |
+| PASSWORD  | whatever | Password to connect |  |   |
 
 
 Various options can be set by using environment variables, see:
