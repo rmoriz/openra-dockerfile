@@ -1,5 +1,6 @@
 # Dockerfile for OpenRA dedicated server
 
+## Example
 ```sh
 $ sudo docker pull rmoriz/openra
 
@@ -21,6 +22,9 @@ Various options can be set by using environment variables, see:
 
 https://github.com/rmoriz/openra-dockerfile/blob/master/bin/start.sh
 
+## FYI
+
+Seems like an example server with RA-mod needs at least 500MB of memory, maybe even more.
 
 ## Copyright & License
 
