@@ -18,6 +18,18 @@ $ sudo docker run -e 'NAME=Docker_Server_2' \
            -d rmoriz/openra 
 ```
 
+## Settings
+
+| ENV  | EXAMPLE VALUE   | DESCRIPTION  | DEFAULT  |   |
+|---|---|---|---|---|
+| NAME  | Silo and Wall Rush  |  Server name  |   |   |
+| MOTD  | Have fun | MOTD, on server join   |   |   |
+| LOCK_BOTS  | True  |  Disable bots  |  False |   |
+| EXTERNAL_PORT  | 1234  |  External port, used for server list registration  |  1234 |   |
+| ADVERTISE_ONLINE  | True  | Register with public  server list |  False |   |
+| MOD  | ra  |  OpenRA Mod "Red Alert"  | ra |   |
+
+
 Various options can be set by using environment variables, see:
 
 https://github.com/rmoriz/openra-dockerfile/blob/master/bin/start.sh
