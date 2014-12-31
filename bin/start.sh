@@ -30,6 +30,7 @@ echo "PASSWORD:         $Password"
 echo "LOCK_BOTS:        $LockBots"
 echo "EXTERNAL_PORT:    $ExternalPort"
 echo "ADVERTISE_ONLINE: $AdvertiseOnline"
+echo "MAX_GAME_DURATION_MILLISECONDS: $MaxGameDurationMilliseconds"
 echo "=================================================================="
 
 mono --debug /usr/lib/openra/OpenRA.Game.exe Game.Mod=$Mod Server.Dedicated=$Dedicated Server.DedicatedLoop=$DedicatedLoop \
