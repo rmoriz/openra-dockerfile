@@ -13,6 +13,7 @@ ExternalPort="${EXTERNAL_PORT:-"1234"}"
 AdvertiseOnline=${ADVERTISE_ONLINE:-"False"}
 Map="${MAP}"
 Password="${PASSWORD}"
+MaxGameDurationMilliseconds="${MAX_GAME_DURATION_MILLISECONDS:-"7200000"}" # 2h x 60min x 60s x 1000
 
 MOTD="${MOTD:-"welcome to a Docker based OpenRA server"}"
 echo $MOTD > /home/openra/.openra/motd.txt
@@ -35,6 +36,7 @@ mono --debug /usr/lib/openra/OpenRA.Game.exe Game.Mod=$Mod Server.Dedicated=$Ded
 Server.Name="$Name" Server.ListenPort=$ListenPort Server.ExternalPort=$ExternalPort \
 Server.LockBots=$LockBots \
 Server.Ban="$Ban" \
+Server.TimeOut="$MaxGameDurationMilliseconds" \
 Server.AdvertiseOnline=$AdvertiseOnline \
 Server.Map=$Map \
 Server.Password=$Password
