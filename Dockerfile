@@ -8,8 +8,10 @@ RUN \
   apt-get -y upgrade && \
   apt-get install -y --no-install-recommends wget ca-certificates rsync && \
   apt-get install -y --no-install-recommends libopenal1 mono-runtime libmono-corlib2.0-cil libmono-system-core4.0-cil \
-                                             libmono-system-drawing4.0-cil libmono-system-windows-forms4.0-cil \
-                                             libfreetype6 libasound2 libgl1-mesa-glx libgl1-mesa-dri xdg-utils zenity && \
+                                             libmono-system-numerics4.0-cil libmono-system-runtime-serialization4.0-cil \
+                                             libmono-system-xml-linq4.0-cil libmono-system-drawing4.0-cil libmono-system-windows-forms4.0-cil \
+                                             libsdl2-2.0-0 \
+                                             libfreetype6 libasound2 libgl1-mesa-glx libgl1-mesa-dri xdg-utils zenity liblua5.1  && \
   rm -rf /var/lib/apt/lists/* \
   rm -rf /var/cache/apt/archives/*
 
