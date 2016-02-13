@@ -18,9 +18,9 @@ RUN \
 # http://www.openra.net/download/
 RUN \
   cd /tmp && \
-  wget https://github.com/OpenRA/OpenRA/releases/download/release-20150424/openra_release.20150424_all.deb && \
-  dpkg -i openra_release.20150424_all.deb && \
-  rm /tmp/openra_release.20150424_all.deb
+  wget https://github.com/OpenRA/OpenRA/releases/download/release-20151224/openra_release.20151224_all.deb && \
+  dpkg -i openra_release.20151224_all.deb && \
+  rm /tmp/openra_release.20151224_all.deb
 
 RUN useradd -d /home/openra -m -s /sbin/nologin openra
 RUN chown -R openra:openra /usr/lib/openra
