@@ -16,7 +16,7 @@ RUN \
   rm -rf /var/cache/apt/archives/*
 
 # http://www.openra.net/download/
-ENV OPENRA_RELEASE=https://github.com/OpenRA/OpenRA/releases/download/release-20160508/openra_release.20160508_all.deb
+ENV OPENRA_RELEASE=https://github.com/OpenRA/OpenRA/releases/download/release-20161015/openra_release.20161015_all.deb
 RUN \
   cd /tmp && \
   wget $OPENRA_RELEASE -O /tmp/openra.deb && \
