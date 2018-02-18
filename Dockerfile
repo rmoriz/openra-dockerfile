@@ -21,7 +21,7 @@ RUN \
 
 
 # http://www.openra.net/download/
-ENV OPENRA_RELEASE_VERSION=20171014
+ENV OPENRA_RELEASE_VERSION=20180218
 ENV OPENRA_RELEASE=https://github.com/OpenRA/OpenRA/releases/download/release-${OPENRA_RELEASE_VERSION}/openra_release.${OPENRA_RELEASE_VERSION}_all.deb
 RUN \
   cd /tmp && \
