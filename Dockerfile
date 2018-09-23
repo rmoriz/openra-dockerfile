@@ -16,33 +16,37 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
           ca-certificates-mono mono-complete \
           locales tzdata \
           libgl1-mesa-glx \
-	  libopenal1 libasound2 xdg-utils zenity libsdl2-2.0-0 liblua5.1\
+	  libopenal1 libasound2 xdg-utils zenity libsdl2-2.0-0 liblua5.1 fuse\
   && dpkg-reconfigure --frontend noninteractive tzdata \
   && rm -rf /var/lib/apt/lists/* \
   && rm -rf /var/cache/apt/archives/*
 
-# http://www.openra.net/download/
-ENV OPENRA_RELEASE_VERSION=20180307
-ENV OPENRA_RELEASE=https://github.com/OpenRA/OpenRA/releases/download/release-${OPENRA_RELEASE_VERSION}/openra_release.${OPENRA_RELEASE_VERSION}_all.deb
-RUN \
-  cd /tmp && \
-  wget $OPENRA_RELEASE -O /tmp/openra.deb && \
-  dpkg -i openra.deb && \
-  rm /tmp/openra.deb
-
 RUN useradd -d /home/openra -m -s /sbin/nologin openra
-RUN chown -R openra:openra /usr/lib/openra
+USER openra
+WORKDIR /home/openra
+
+# http://www.openra.net/download/
+ENV OPENRA_RELEASE_VERSION=20180923
+ENV OPENRA_RELEASE=https://github.com/OpenRA/OpenRA/releases/download/release-${OPENRA_RELEASE_VERSION}/OpenRA-Red-Alert-x86_64.AppImage
+RUN \
+  mkdir /home/openra/tmp && \
+  cd /home/openra/tmp && \
+  wget $OPENRA_RELEASE -O /home/openra/tmp/crapimage && \
+  chmod 755 /home/openra/tmp/crapimage && \
+  /home/openra/tmp/crapimage --appimage-extract && \
+  mv /home/openra/tmp/squashfs-root/* /home/openra/ && \
+  rm -rf /home/openra/tmp/
+
+COPY --chown=openra:openra launch-dedicated.sh /home/openra/usr/lib/openra
 
 RUN mkdir /home/openra/.openra && \
     mkdir /home/openra/.openra/Logs && \
-    mkdir /home/openra/.openra/maps
-
-RUN chown -R openra:openra /home/openra/
+    mkdir /home/openra/.openra/maps && \
+    chmod 755 /home/openra/usr/lib/openra/launch-dedicated.sh
 
 EXPOSE 1234
 
-VOLUME ["/home/openra", "/usr/lib/openra", "/home/openra/.openra/Logs", "/home/openra/.openra/maps"]
-USER openra
+WORKDIR /home/openra/usr/lib/openra
 
-WORKDIR /usr/lib/openra
-CMD [ "/usr/lib/openra/launch-dedicated.sh" ]
+VOLUME ["/home/openra", "/usr/lib/openra", "/home/openra/.openra/Logs", "/home/openra/.openra/maps"]
+CMD [ "/home/openra/usr/lib/openra/launch-dedicated.sh" ]
