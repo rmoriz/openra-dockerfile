@@ -26,7 +26,7 @@ USER openra
 WORKDIR /home/openra
 
 # http://www.openra.net/download/
-ENV OPENRA_RELEASE_VERSION=20180923
+ENV OPENRA_RELEASE_VERSION=20181215
 ENV OPENRA_RELEASE=https://github.com/OpenRA/OpenRA/releases/download/release-${OPENRA_RELEASE_VERSION}/OpenRA-Red-Alert-x86_64.AppImage
 RUN \
   mkdir /home/openra/tmp && \
