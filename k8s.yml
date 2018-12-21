@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openra-deployment
+  labels:
+    app: openra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openra
+  template:
+    metadata:
+      labels:
+        app: openra
+    spec:
+      containers:
+        - name: openra-server
+          image: rmoriz/openra
+          ports:
+            - containerPort: 12345
+          env:
+              - name: Name
+                value: "k8s Server"
+              - name: Mod
+                value: "ra"
+              - name: ListenPort
+                value: "1234"
+              - name: ExternalPort
+                value: "1234"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openra-service
+spec:
+  selector:
+    app: openra
+  ports:
+    - port: 12345
+      targetPort: 1234
