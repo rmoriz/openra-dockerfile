@@ -37,5 +37,5 @@ spec:
   selector:
     app: openra
   ports:
-    - port: 12345
+    - port: 1234
       targetPort: 1234
