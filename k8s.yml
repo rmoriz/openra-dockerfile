@@ -18,7 +18,7 @@ spec:
         - name: openra-server
           image: rmoriz/openra
           ports:
-            - containerPort: 12345
+            - containerPort: 1234
           env:
               - name: Name
                 value: "k8s Server"
