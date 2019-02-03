@@ -1,52 +1,75 @@
-FROM ubuntu:18.04
-MAINTAINER Roland Moriz <roland@moriz.de>
+ARG BASE_IMAGE_PREFIX
+FROM ${BASE_IMAGE_PREFIX}mono
 
-ENV TZ="/usr/share/zoneinfo/UTC"
+# see hooks/post_checkout
+ARG ARCH
 
-RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections \
-  && apt-get update \
-  && apt-get -y upgrade\
-  && apt-get install -y dirmngr\
-  && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF\
-  && echo "deb http://download.mono-project.com/repo/ubuntu stable-bionic main"  > /etc/apt/sources.list.d/mono-official-stable.list \
-  && apt-get update \
-  && apt-get -y upgrade\
-  && apt-get install -y --no-install-recommends \
-          wget ca-certificates rsync \
-          ca-certificates-mono mono-complete \
-          locales tzdata \
-          libgl1-mesa-glx \
-	  libopenal1 libasound2 xdg-utils zenity libsdl2-2.0-0 liblua5.1 fuse\
-  && dpkg-reconfigure --frontend noninteractive tzdata \
-  && rm -rf /var/lib/apt/lists/* \
-  && rm -rf /var/cache/apt/archives/*
+# HACK: don't fail when no qemu binary provided
+COPY .gitignore qemu-${ARCH}-static* /usr/bin/
 
-RUN useradd -d /home/openra -m -s /sbin/nologin openra
-USER openra
-WORKDIR /home/openra
-
-# http://www.openra.net/download/
+# https://www.openra.net/download/
 ENV OPENRA_RELEASE_VERSION=20181215
-ENV OPENRA_RELEASE=https://github.com/OpenRA/OpenRA/releases/download/release-${OPENRA_RELEASE_VERSION}/OpenRA-Red-Alert-x86_64.AppImage
-RUN \
-  mkdir /home/openra/tmp && \
-  cd /home/openra/tmp && \
-  wget $OPENRA_RELEASE -O /home/openra/tmp/crapimage && \
-  chmod 755 /home/openra/tmp/crapimage && \
-  /home/openra/tmp/crapimage --appimage-extract && \
-  mv /home/openra/tmp/squashfs-root/* /home/openra/ && \
-  rm -rf /home/openra/tmp/
+ENV OPENRA_RELEASE=https://github.com/OpenRA/OpenRA/releases/download/release-${OPENRA_RELEASE_VERSION}/OpenRA-release-${OPENRA_RELEASE_VERSION}-source.tar.bz2
 
-COPY --chown=openra:openra launch-dedicated.sh /home/openra/usr/lib/openra
-
-RUN mkdir /home/openra/.openra && \
-    mkdir /home/openra/.openra/Logs && \
-    mkdir /home/openra/.openra/maps && \
-    chmod 755 /home/openra/usr/lib/openra/launch-dedicated.sh
+RUN set -xe; \
+        \
+        apt-get update; \
+        apt-get -y upgrade; \
+        apt-get install -y --no-install-recommends \
+                    ca-certificates \
+                    curl \
+                    liblua5.1 \
+                    make \
+                    patch \
+                    unzip \
+                    xdg-utils \
+                  ; \
+        useradd -d /home/openra -m -s /sbin/nologin openra; \
+        mkdir /home/openra/source; \
+        cd /home/openra/source; \
+        curl -L $OPENRA_RELEASE | tar xj; \
+# HACK to fix hard coded paths in upstream in old releases.
+# bleed status: https://github.com/OpenRA/OpenRA/blob/bleed/thirdparty/configure-native-deps.sh
+        mkdir -p /opt/lib; \
+        liblua=$(find /usr/lib -name liblua5.1.so); \
+        ln -s $liblua /opt/lib; \
+        ls -la /opt/lib/*.so; \
+# /HACK
+# PATCH 'SERVER FULL' BUG
+        if [ "$OPENRA_RELEASE_VERSION" = "20181215" ]; then \
+           curl -L https://github.com/OpenRA/OpenRA/commit/c6d5bc9511cf983b8b7a769ab3064ed45fc4fb02.diff | patch -p1; \
+        fi; \
+# /PATCH
+        make dependencies; \
+        make all; \
+        make prefix= DESTDIR=/home/openra install; \
+        cd .. && rm -rf /home/openra/source; \
+        chmod 755 /home/openra/lib/openra/launch-dedicated.sh; \
+        mkdir /home/openra/.openra \
+              /home/openra/.openra/Logs \
+              /home/openra/.openra/maps \
+            ;\
+        chown -R openra:openra /home/openra/.openra; \
+        apt-get purge -y curl make patch unzip; \
+        rm -rf /var/lib/apt/lists/* \
+               /var/cache/apt/archives/*
 
 EXPOSE 1234
 
-WORKDIR /home/openra/usr/lib/openra
+USER openra
 
-VOLUME ["/home/openra", "/usr/lib/openra", "/home/openra/.openra/Logs", "/home/openra/.openra/maps"]
-CMD [ "/home/openra/usr/lib/openra/launch-dedicated.sh" ]
+WORKDIR /home/openra/lib/openra
+VOLUME ["/home/openra/.openra"]
+
+# see https://github.com/OpenRA/OpenRA/blob/release-20181215/launch-dedicated.sh
+CMD [ "/home/openra/lib/openra/launch-dedicated.sh" ]
+
+# annotation labels according to
+# https://github.com/opencontainers/image-spec/blob/v1.0.1/annotations.md#pre-defined-annotation-keys
+LABEL org.opencontainers.image.title="OpenRA dedicated server"
+LABEL org.opencontainers.image.description="Image to run a server instance for OpenRA"
+LABEL org.opencontainers.image.url="https://github.com/rmoriz/openra-dockerfile"
+LABEL org.opencontainers.image.documentation="https://github.com/rmoriz/openra-dockerfile#readme"
+LABEL org.opencontainers.image.version=${OPENRA_RELEASE_VERSION}
+LABEL org.opencontainers.image.licenses="GPL-3.0"
+LABEL org.opencontainers.image.authors="Roland Moriz"
