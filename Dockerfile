@@ -8,7 +8,7 @@ ARG ARCH
 COPY .gitignore qemu-${ARCH}-static* /usr/bin/
 
 # https://www.openra.net/download/
-ENV OPENRA_RELEASE_VERSION=20190314
+ENV OPENRA_RELEASE_VERSION=20191117
 ENV OPENRA_RELEASE=https://github.com/OpenRA/OpenRA/releases/download/release-${OPENRA_RELEASE_VERSION}/OpenRA-release-${OPENRA_RELEASE_VERSION}-source.tar.bz2
 
 RUN set -xe; \
