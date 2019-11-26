@@ -7,11 +7,22 @@ ARG ARCH
 # HACK: don't fail when no qemu binary provided
 COPY .gitignore qemu-${ARCH}-static* /usr/bin/
 
+ARG OPENRA_RELEASE_VERSION=20191117
+ARG OPENRA_RELEASE
+ARG OPENRA_RELEASE_TYPE=release
+
 # https://www.openra.net/download/
-ENV OPENRA_RELEASE_VERSION=20191117
-ENV OPENRA_RELEASE=https://github.com/OpenRA/OpenRA/releases/download/release-${OPENRA_RELEASE_VERSION}/OpenRA-release-${OPENRA_RELEASE_VERSION}-source.tar.bz2
+ENV OPENRA_RELEASE_VERSION=${OPENRA_RELEASE_VERSION:-20191117}
+ENV OPENRA_RELEASE_TYPE=${OPENRA_RELEASE_TYPE:-release}
+ENV OPENRA_RELEASE=${OPENRA_RELEASE:-https://github.com/OpenRA/OpenRA/releases/download/${OPENRA_RELEASE_TYPE}-${OPENRA_RELEASE_VERSION}/OpenRA-${OPENRA_RELEASE_TYPE}-${OPENRA_RELEASE_VERSION}-source.tar.bz2}
 
 RUN set -xe; \
+        echo "=================================================================="; \
+        echo "Building OpenRA:"; \
+        echo "  version:\t${OPENRA_RELEASE_VERSION}"; \
+        echo "  type:   \t${OPENRA_RELEASE_TYPE}"; \
+        echo "  source: \t${OPENRA_RELEASE}"; \
+        echo "=================================================================="; \
         \
         apt-get update; \
         apt-get -y upgrade; \
@@ -70,6 +81,6 @@ LABEL org.opencontainers.image.title="OpenRA dedicated server"
 LABEL org.opencontainers.image.description="Image to run a server instance for OpenRA"
 LABEL org.opencontainers.image.url="https://github.com/rmoriz/openra-dockerfile"
 LABEL org.opencontainers.image.documentation="https://github.com/rmoriz/openra-dockerfile#readme"
-LABEL org.opencontainers.image.version=${OPENRA_RELEASE_VERSION}
+LABEL org.opencontainers.image.version=${OPENRA_RELEASE_TYPE}-${OPENRA_RELEASE_VERSION}
 LABEL org.opencontainers.image.licenses="GPL-3.0"
 LABEL org.opencontainers.image.authors="Roland Moriz"
