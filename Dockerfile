@@ -7,12 +7,12 @@ ARG ARCH
 # HACK: don't fail when no qemu binary provided
 COPY .gitignore qemu-${ARCH}-static* /usr/bin/
 
-ARG OPENRA_RELEASE_VERSION=20191117
+ARG OPENRA_RELEASE_VERSION=20200202
 ARG OPENRA_RELEASE
 ARG OPENRA_RELEASE_TYPE=release
 
 # https://www.openra.net/download/
-ENV OPENRA_RELEASE_VERSION=${OPENRA_RELEASE_VERSION:-20191117}
+ENV OPENRA_RELEASE_VERSION=${OPENRA_RELEASE_VERSION:-20200202}
 ENV OPENRA_RELEASE_TYPE=${OPENRA_RELEASE_TYPE:-release}
 ENV OPENRA_RELEASE=${OPENRA_RELEASE:-https://github.com/OpenRA/OpenRA/releases/download/${OPENRA_RELEASE_TYPE}-${OPENRA_RELEASE_VERSION}/OpenRA-${OPENRA_RELEASE_TYPE}-${OPENRA_RELEASE_VERSION}-source.tar.bz2}
 
@@ -72,7 +72,11 @@ USER openra
 WORKDIR /home/openra/lib/openra
 VOLUME ["/home/openra/.openra"]
 
-# see https://github.com/OpenRA/OpenRA/blob/release-20181215/launch-dedicated.sh
+# https://github.com/OpenRA/OpenRA/blob/release-20200202/launch-dedicated.sh
+# NOTE: With 2020202 geoip mapping and player IPs are not resolved/disclosed
+#       anymore due to upstream and privacy reasons.
+#       see options "Server.ShareAnonymizedIPs" and "Server.GeoIPDatabase"
+
 CMD [ "/home/openra/lib/openra/launch-dedicated.sh" ]
 
 # annotation labels according to
