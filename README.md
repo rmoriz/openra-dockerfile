@@ -24,7 +24,6 @@ $ docker run -d -p 1234:1234 \
              -e Name="DOCKER SERVER" \
              -e Mod=ra \
              -e ListenPort="1234" \
-             -e ExternalPort="1234" \
              --name openra \
              rmoriz/openra
 
