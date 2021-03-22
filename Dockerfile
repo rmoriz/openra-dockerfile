@@ -7,7 +7,7 @@ ARG ARCH
 # HACK: don't fail when no qemu binary provided
 COPY .gitignore qemu-${ARCH}-static* /usr/bin/
 
-ARG OPENRA_RELEASE_VERSION=20200503
+ARG OPENRA_RELEASE_VERSION=20210321
 ARG OPENRA_RELEASE
 ARG OPENRA_RELEASE_TYPE=release
 
@@ -30,32 +30,25 @@ RUN set -xe; \
                     ca-certificates \
                     curl \
                     liblua5.1 \
+                    libsdl2-2.0-0 \
+                    libopenal1 \
                     make \
                     patch \
                     unzip \
                     xdg-utils \
+                    zenity \
+                    wget \
                   ; \
         useradd -d /home/openra -m -s /sbin/nologin openra; \
         mkdir /home/openra/source; \
         cd /home/openra/source; \
         curl -L $OPENRA_RELEASE | tar xj; \
-# HACK to fix hard coded paths in upstream in old releases.
-# bleed status: https://github.com/OpenRA/OpenRA/blob/bleed/thirdparty/configure-native-deps.sh
-        mkdir -p /opt/lib; \
-        liblua=$(find /usr/lib -name liblua5.1.so); \
-        ln -s $liblua /opt/lib; \
-        ls -la /opt/lib/*.so; \
-# /HACK
-# PATCH 'SERVER FULL' BUG
-        if [ "$OPENRA_RELEASE_VERSION" = "20181215" ]; then \
-           curl -L https://github.com/OpenRA/OpenRA/commit/c6d5bc9511cf983b8b7a769ab3064ed45fc4fb02.diff | patch -p1; \
-        fi; \
-# /PATCH
-        make dependencies; \
-        make all; \
-        make prefix= DESTDIR=/home/openra install; \
-        cd .. && rm -rf /home/openra/source; \
-        chmod 755 /home/openra/lib/openra/launch-dedicated.sh; \
+        make all RUNTIME=mono; \
+        # Hack
+        # "make install" seems not to work anymore, needs debugging
+        mkdir -p /home/openra/lib/openra; \
+        mv /home/openra/source/* /home/openra/lib/openra; \
+        # /Hack
         mkdir /home/openra/.openra \
               /home/openra/.openra/Logs \
               /home/openra/.openra/maps \
