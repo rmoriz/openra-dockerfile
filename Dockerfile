@@ -7,7 +7,7 @@ ARG ARCH
 # HACK: don't fail when no qemu binary provided
 COPY .gitignore qemu-${ARCH}-static* /usr/bin/
 
-ARG OPENRA_RELEASE_VERSION=20230225
+ARG OPENRA_RELEASE_VERSION=20231010
 ARG OPENRA_RELEASE
 ARG OPENRA_RELEASE_TYPE=release
 
